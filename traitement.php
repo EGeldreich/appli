@@ -1,8 +1,6 @@
 <?php
     session_start();
 
-    
-
     if(isset($_POST['submit'])){
 
         $name = filter_input(INPUT_POST, "name", FILTER_SANITIZE_STRING);
@@ -20,8 +18,22 @@
 
             $_SESSION['products'][] = $product;
         }
-
-
     }
 
+    if(isset($_GET['action'])){
+        $productIndex = $_POST['product_index'];
+        switch($_GET['action']){
+            case "delete" :
+                unset($_SESSION['products'][$productIndex]);
+                
+            case "deleteAll" :
+                $_SESSION['products'] = [];
+            case "down-qtt" :
+                $_SESSION['products'][$productIndex]['qtt'] -= 1;
+            case "up-qtt" :
+                $_SESSION['products'][$productIndex]['qtt'] += 1;
+        }   
+        header('location: recap.php');
+        exit();    
+    }
     header("location:index.php");

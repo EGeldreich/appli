@@ -1,17 +1,7 @@
 <?php
     session_start();
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link href="style.css" rel="stylesheet" />
-    <title>Récapitulatif des produits</title>
-</head>
-<body>
-    <?php 
+    ob_start();
+    $title = "Panier";
         if(!isset($_SESSION['products']) || empty($_SESSION['products'])){
             echo "<p>Aucun produit en session...</p>";
         }
@@ -33,8 +23,24 @@
                         "<td>".$index."</td>",
                         "<td>".$product['name']."</td>",
                         "<td>".number_format($product['price'], 2, ",", "&nbsp;")."&nbsp;€</td>",
-                        "<td>".$product['qtt']."</td>",
+                        "<td>",
+                            "<form action='traitement.php?action=down-qtt' method='post'>",
+                                "<input type='hidden' name='product_index' value='".$index."'>",
+                                "<input type='submit' name='substract' value='-'>",
+                            "</form>"
+                            .$product['qtt'].
+                            "<form action='traitement.php?action=up-qtt' method='post'>",
+                                "<input type='hidden' name='product_index' value='".$index."'>",
+                                "<input type='submit' name='add' value='+'>",
+                            "</form>",
+                        "</td>",
                         "<td>".number_format($product['total'], 2, ",", "&nbsp;")."&nbsp;€</td>",
+                        "<td>",
+                            "<form action='traitement.php?action=delete' method='post'>",
+                                "<input type='hidden' name='product_index' value='".$index."'>",
+                                "<input type='submit' name='delete' value='Supprimer'>",
+                            "</form>",
+                        "</td>",
                     "</tr>";
                 $totalGeneral += $product['total'];
             }
@@ -42,9 +48,16 @@
                     "<td colspan=4>Total général : </td>",
                     "<td><strong>".number_format($totalGeneral, 2, ",", "&nbsp;")."&nbsp;€</strong></td>",
                 "</tr>",
+                "<tr>",
+                    "<td colspan=6>",
+                        "<form action='traitement.php?action=deleteAll' method='post'>",
+                        "<input type='submit' name='deleteAll' value='Supprimer tout'>",
+                    "</td>",
+                "</tr>",
                 "</tbody>",
                 "</table>";
         }
-    ?>
-</body>
-</html>
+
+    $content = ob_get_clean();
+    require_once "template.php";
+?>
