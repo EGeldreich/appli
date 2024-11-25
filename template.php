@@ -9,10 +9,11 @@
     <title><?=$title?></title>
 </head>
 <?php
-    $totalProduit = 0;
-    foreach($_SESSION['products'] as $index => $product){
-        $totalProduit += $product['qtt'];
-    }
+    // // Used to display number of products in the kart
+    // $totalProduit = 0;
+    // foreach($_SESSION['products'] as $index => $product){
+    //     $totalProduit += $product['qtt'];
+    // }
 ?>
 <body>
    <nav>
@@ -21,7 +22,7 @@
    </nav>
    <?="<h1>".$title."</h1>";?>
    <div id="wrapper">
-        <?= $content ?>
+        <?= $content ?> <!-- $content is given by the output buffer get (ob_get_clean) in index.php or recap.php -->
    </div>
 </body>
 </html>
